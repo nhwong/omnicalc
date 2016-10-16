@@ -12,25 +12,22 @@ class CalculationsController < ApplicationController
 
     text_array = @text.split
 
-    # if @text.strip.delete(" ").length > 0
-    #   num_words = 1
-    # else
-    #   num_words = 0
-    # end
-    #
-    # @text.strip.each_char do |c|
-    #   if c == " "
-    #     num_words += 1
-    #   end
-    # end
+    character_count_without_spaces = 0
+    occurances = 0
+    text_array.each do |element|
+      character_count_without_spaces += element.length
+      if element.downcase == @special_word.downcase
+        occurances += 1
+      end
+    end
 
     @character_count_with_spaces = @text.length
 
-    @character_count_without_spaces = @text.strip.delete(" ").length
+    @character_count_without_spaces = character_count_without_spaces
 
     @word_count = text_array.count
 
-    @occurrences = text_array.count(@special_word.strip)
+    @occurrences = occurances
 
     # ================================================================================
     # Your code goes above.
@@ -51,7 +48,13 @@ class CalculationsController < ApplicationController
     # The principal value the user input is in the decimal @principal.
     # ================================================================================
 
-    @monthly_payment = "Replace this string with your answer."
+    monthly_rate = @apr / 12 / 100
+    num_months = @years * 12
+    monthly_payment = @principal * \
+                      (monthly_rate * (1 + monthly_rate)**num_months) / \
+                      ((1 + monthly_rate)**num_months - 1)
+
+    @monthly_payment = monthly_payment
 
     # ================================================================================
     # Your code goes above.
