@@ -98,27 +98,50 @@ class CalculationsController < ApplicationController
     # The numbers the user input are in the array @numbers.
     # ================================================================================
 
-    @sorted_numbers = "Replace this string with your answer."
+    @sorted_numbers = @numbers.sort()
 
-    @count = "Replace this string with your answer."
+    @count = @numbers.count
 
-    @minimum = "Replace this string with your answer."
+    @minimum = @numbers.min
 
-    @maximum = "Replace this string with your answer."
+    @maximum = @numbers.max
 
-    @range = "Replace this string with your answer."
+    @range = @maximum - @minimum
 
-    @median = "Replace this string with your answer."
+    sum = 0
+    sum_of_squared = 0
+    @numbers.each do |x|
+      sum += x
+      sum_of_squared += x**2
+    end
 
-    @sum = "Replace this string with your answer."
+    if (@count % 2) == 0
+      median = 0.5 * (@sorted_numbers[@count / 2] + @sorted_numbers[@count / 2 - 1])
+    else
+      median = @sorted_numbers[(@count - 1) / 2]
+    end
 
-    @mean = "Replace this string with your answer."
+    @median = median
 
-    @variance = "Replace this string with your answer."
+    @sum = @numbers.inject(0){|sum,x| sum + x }
 
-    @standard_deviation = "Replace this string with your answer."
+    @mean = @sum / @count
 
-    @mode = "Replace this string with your answer."
+    @variance = (sum_of_squared / @count - (sum / @count) ** 2).round(5)
+
+    @standard_deviation = @variance ** 0.5
+
+    gb = @numbers.group_by{|x| x}
+    mode = nil
+    max_occurances = 0
+    gb.each do |key, array|
+      if array.count > max_occurances
+        mode = [key]
+      elsif array.count == max_occurances
+        mode.push(key)
+      end
+    end
+    @mode = if mode.count==1 then mode[0] else mode end
 
     # ================================================================================
     # Your code goes above.
